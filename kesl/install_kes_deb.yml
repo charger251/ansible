@@ -1,0 +1,23 @@
+---
+- hosts: [your_hosts_group]
+  tasks:
+   - name: copy
+     copy: src=/files dest=/tmp/
+
+   - name: install_klna
+     apt:
+        deb: /tmp/deb/klnagent64_11.0.0-29_amd64.deb
+
+   - name: post_script_klna
+     shell: /opt/kaspersky/klnagent64/lib/bin/setup/postinstall.pl </tmp/install-klna.cfg
+
+   - name: install_kesl
+     apt:
+        deb: /tmp/deb/kesl_10.1.1-6421_amd64.deb
+
+   - name: script_kesl
+     script: /root/kes/kesl-setup.pl --autoinstall=/tmp/auto_install_kes.ini
+     ignore_errors: True
+
+   - name: add_key
+     shell: /opt/kaspersky/kesl/bin/kesl-control --install-active-key /tmp/kes.key
